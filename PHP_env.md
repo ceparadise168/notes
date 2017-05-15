@@ -501,3 +501,195 @@ php-mysqlnd.x86_64     5.4.16-42.el7         base
 
 
 修改 edit_data query update users  新增ID
+
+
+407台中市西屯區市政北二路238號   33F - B區
+
+
+
+https://www.digitalocean.com/community/questions/help-me-to-fix-err_connection_refused
+
+解決 err_connection_refused
+1.關閉防火牆
+2.建立相對應的日誌
+```
+mkdir -p /var/log/nginx/mysitename/
+touch /var/log/nginx/mysitename/access.log
+
+```
+
+```
+[root@localhost ~]# mysql
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+```
+
+http://mustgeorge.blogspot.tw/2011/11/mysql-error-1045-28000-using-password.html
+https://dev.mysql.com/doc/refman/5.7/en/adding-users.html
+
+# creat user
+
+先使用root登入
+```
+[root@localhost ~]# mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 11
+Server version: 5.7.18 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE USER 'eric_tu'@'localhost' IDENTIFIED BY 'Eric_tu168';
+Query OK, 0 rows affected (0.02 sec)
+
+```
+
+```
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'eric_tu'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+```
+
+切回 eric_tu@
+
+```
+[eric_tu@localhost DoctrineToutorial]$ mysql -u eric_tu -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 14
+Server version: 5.7.18 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> 
+```
+
+
+
+
+更新PHP 5.4 到 5.6 後各種設定跑掉
+
+確定一下php-fpm 各種設定 
+
+nginx 應該不用動 不過要重啟
+
+權限要設定好  
+
+更改 conf.d/default  中的 user 從apache 到 nginx
+
+
+```
+systemctl disable firewalld
+
+systemctl stop firewalld
+
+systemctl status firewalld
+```
+
+
+
+# https://kknews.cc/other/qye96lb.html 詳細
+
+
+# How to Fix PHP Error: Call to undefined function posix_getpwuid()
+
+
+```
+yum install php-posix
+
+```
+
+
+解決無法用ssh連入的問題
+
+```
+Connecting to 172.17.11.147:22...
+Could not connect to '172.17.11.147' (port 22): Connection failed.
+
+Type `help' to learn how to use Xshell prompt.
+Xshell:\>
+```
+
+先關掉防火牆重啟看看
+```
+出现这种情况的原因：
+1.服务器端防火墙关闭了22端口，没有开启ssh服务；
+2.没有安装ssh；
+解决原因1：使用netstat,查看是否启动shh服务；
+开启ssh服务：service sshd start
+关闭ssh服务：service sshd stop
+重启ssh服务：servcie sshd restart
+SSH服务开机自动启动：chkconfig sshd on
+取消开机自启动:chkconfig sshd off
+开启服务后，检查服务状态：service sshd status
+解决原因2：安装ssh：
+yum install openssh-server
+```
+
+沒用 
+
+service ssh status
+
+```
+sshd.service - OpenSSH server daemon
+   Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled)
+   Active: activating (auto-restart) (Result: exit-code) since Thu 2016-05-05 03:30:48 UTC; 2s ago
+  Process: 10938 ExecReload=/bin/kill -HUP $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 10944 ExecStart=/usr/sbin/sshd -D $OPTIONS (code=exited, status=255)
+ Main PID: 10944 (code=exited, status=255)
+
+May 05 03:30:48 ixnetwork-uk1 systemd[1]: sshd.service: main process exited, code=exited, status=255/n/a
+May 05 03:30:48 ixnetwork-uk1 systemd[1]: Unit sshd.service entered failed state.
+```
+
+# SELinux
+https://blog.ixnet.work/2016/05/05/change-centos-ssh-port/
+
+https://serverfault.com/questions/538037/sshd-service-fails-to-start
+
+http://asherwang.blog.51cto.com/11255017/1894122
+
+ yum provides /usr/sbin/semanage
+
+ yum -y install policycoreutils-python
+
+
+ semanage port -l | grep ssh
+
+ 只允許port 22
+
+ http://sharadchhetri.com/2014/10/15/centos-7-rhel-7-change-openssh-port-number-selinux-enabled/
+
+ 去修改ssd_config port 然後新增規則
+
+
+
+
+
+# 永久性的關掉 selinux 
+
+$ sudo vi /etc/sysconfig/selinux     
+
+找到
+SELINUX=enforcing
+然後修改為
+SELINUX=disabled
+要重新開機 reboot / restart 後才會套用
+
+http://blog.xuite.net/tolarku/blog/195633562-CentOS+%E9%97%9C%E9%96%89+selinux
+
+終於成功了QQ
+
+
+

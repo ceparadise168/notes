@@ -147,7 +147,89 @@ https://github.com/stephpy/vim-php-cs-fixer
 # How can I make '/etc/vim/vimrc' writeable?
 
 chmod chmod 666 /etc/vim/vimrc 
+
+
 or
+
+
 chown yourloginnameher /etc/vim/vimrc
 
 https://askubuntu.com/questions/278523/how-can-i-make-etc-vim-vimrc-writeable
+
+
+
+
+# vimrc great setting
+
+https://github.com/spf13/spf13-vim
+
+# ref
+
+http://note.drx.tw/2008/01/vimrc-config.html
+
+http://stackoverflow.com/questions/426963/replace-tab-with-spaces-in-vim
+
+http://oomusou.io/php/php-psr2/
+
+http://kaochenlong.com/2011/12/28/vim-tips/
+
+
+
+http://www.vixual.net/blog/archives/234
+
+重新命名 
+先以:Ex 進入檔案瀏覽器
+再用 R 重新命名
+
+
+~/.vimrc
+```
+
+   1 set enc=utf8                                                                                                                                                                                                                                                             
+   2 
+   3 set nu
+   4 
+   5 set expandtab
+   6 
+   7 set tabstop=4
+   8 
+   9 set shiftwidth=4
+  10 
+  11 set hls
+  12 
+  13 set background=dark
+  14 
+  15 set scrolloff=3
+  16 
+  17 set foldenable
+  18 set foldmethod=indent
+  19 set foldcolumn=1
+  20 set foldlevel=5
+  21 
+  22 " 高亮當前行 (水平)
+  23 set cursorline
+ ~                          
+ ```
+
+
+
+ # 分割視窗
+
+ https://www.peterdavehello.org/2015/05/vim-split-window/
+
+ http://linux.vbird.org/linux_basic/0310vi.php#vim_ws
+
+開新水平視窗:
+:new
+開新垂直視窗:
+:vnew
+
+開啟檔案:
+:sp [filename]
+:vsp [filename]
+
+ctrl + W (放開之後) + 上下左右 或 j k 來移動視窗
+
+http://vimcolors.com/
+
+http://vimawesome.com/?q=tag:php

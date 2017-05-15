@@ -1411,3 +1411,100 @@ bash 的設定檔主要分為 login shell 與 non-login shell。login shell 主�
 
 
 本章介紹的管線命令主要有：cut, grep, sort, wc, uniq, tee, tr, col, join, paste, expand, split, xargs 等。
+
+
+計算目錄檔案大小
+https://www.orztw.com/2014/06/linux-command-du.html
+
+
+du -s
+
+or 
+
+
+du -sh
+
+
+# zsh
+---
+sudo yum update && sudo yum -y install zsh
+
+http://hupengfei.com/archives/421
+
+https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH
+
+sudo wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
+
+
+/home/eric_tu/.oh-my-zsh
+
+---
+
+```
+[eric_tu@localhost /]$ chsh -l
+/bin/sh
+/bin/bash
+/sbin/nologin
+/usr/bin/sh
+/usr/bin/bash
+/usr/sbin/nologin
+/bin/zsh
+[eric_tu@localhost /]$ wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
+--2017-05-09 10:03:17--  https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh
+正在查找主機 raw.github.com (raw.github.com)... 151.101.0.133, 151.101.64.133, 151.101.128.133, ...
+正在連接 raw.github.com (raw.github.com)|151.101.0.133|:443... 連上了。
+已送出 HTTP 要求，正在等候回應... 301 Moved Permanently
+位置: https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh [跟隨至新的 URL]
+--2017-05-09 10:03:18--  https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
+正在查找主機 raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.64.133, 151.101.128.133, 151.101.192.133, ...
+正在連接 raw.githubusercontent.com (raw.githubusercontent.com)|151.101.64.133|:443... 連上了。
+已送出 HTTP 要求，正在等候回應... 200 OK
+長度: 4018 (3.9K) [text/plain]
+Saving to: ‘STDOUT’
+
+100%[====================================================================================================================================================================================================================================>] 4,018       --.-K/s   in 0s      
+
+2017-05-09 10:03:18 (43.5 MB/s) - written to stdout [4018/4018]
+
+Cloning Oh My Zsh...
+Cloning into '/home/eric_tu/.oh-my-zsh'...
+remote: Counting objects: 831, done.
+remote: Compressing objects: 100% (700/700), done.
+remote: Total 831 (delta 14), reused 777 (delta 10), pack-reused 0
+Receiving objects: 100% (831/831), 567.68 KiB | 108.00 KiB/s, done.
+Resolving deltas: 100% (14/14), done.
+Looking for an existing zsh config...
+Using the Oh My Zsh template file and adding it to ~/.zshrc
+Time to change your default shell to zsh!
+變更 eric_tu 的 shell。
+密碼：chsh: 驗證失敗
+chsh: changing user attribute failed: 拒絕不符權限的操作
+[eric_tu@localhost /]$ sudo wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
+--2017-05-09 10:03:44--  https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh
+正在查找主機 raw.github.com (raw.github.com)... 151.101.128.133, 151.101.0.133, 151.101.192.133, ...
+正在連接 raw.github.com (raw.github.com)|151.101.128.133|:443... 連上了。
+已送出 HTTP 要求，正在等候回應... 301 Moved Permanently
+位置: https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh [跟隨至新的 URL]
+--2017-05-09 10:03:45--  https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
+正在查找主機 raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.0.133, 151.101.192.133, 151.101.64.133, ...
+正在連接 raw.githubusercontent.com (raw.githubusercontent.com)|151.101.0.133|:443... 連上了。
+已送出 HTTP 要求，正在等候回應... 200 OK
+長度: 4018 (3.9K) [text/plain]
+Saving to: ‘STDOUT’
+
+100%[====================================================================================================================================================================================================================================>] 4,018       --.-K/s   in 0s      
+
+2017-05-09 10:03:45 (45.9 MB/s) - written to stdout [4018/4018]
+
+You already have Oh My Zsh installed.
+You'll need to remove /home/eric_tu/.oh-my-zsh if you want to re-install.
+[eric_tu@localhost /]$ 
+```
+
+http://icarus4.logdown.com/posts/177661-from-bash-to-zsh-setup-tips
+
+
+# The Themes
+
+
+https://github.com/robbyrussell/oh-my-zsh/wiki/themes
