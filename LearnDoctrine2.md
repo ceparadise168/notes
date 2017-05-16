@@ -204,7 +204,9 @@ class Product
     // .. (other code)
 }
 ```
-PHP
+
+
+```
 <?php
 // src/Product.php
 /**
@@ -219,6 +221,10 @@ class Product
 
     // .. (other code)
 }
+```
+
+
+
 XML YAML
 The top-level entity definition tag specifies information about the class and table-name. The primitive type Product#name is defined as a field attribute. The id property is defined with the id tag, this has a generator tag nested inside which defines that the primary key generation mechanism automatically uses the database platforms native id generation strategy (for example AUTO INCREMENT in the case of MySql or Sequences in the case of PostgreSql and Oracle).
 
@@ -550,3 +556,359 @@ Because we only work with collections for the references we must be careful to i
 
 ***Consistency of bi-directional references on the inverse side of a relation have to be managed in userland application code. Doctrine cannot magically update your collections to be consistent.***
 
+In the case of Users and Bugs we have references back and forth to the assigned and reported bugs from a user, making this relation bi-directional. We have to change the code to ensure consistency of the bi-directional reference:
+
+# 修改collection使符合雙向驅動
+```
+<?php
+// src/Bug.php
+class Bug
+{
+    // ... (previous code)
+
+    protected $engineer;
+    protected $reporter;
+
+    public function setEngineer($engineer)
+    {
+        $engineer->assignedToBug($this);
+        $this->engineer = $engineer;
+    }
+
+    public function setReporter($reporter)
+    {
+        $reporter->addReportedBug($this);
+        $this->reporter = $reporter;
+    }
+
+    public function getEngineer()
+    {
+        return $this->engineer;
+    }
+
+    public function getReporter()
+    {
+        return $this->reporter;
+    }
+}
+```
+
+```
+<?php
+// src/User.php
+class User
+{
+    // ... (previous code)
+
+    protected $reportedBugs = null;
+    protected $assignedBugs = null;
+
+    public function addReportedBug($bug)
+    {
+        $this->reportedBugs[] = $bug;
+    }
+
+    public function assignedToBug($bug)
+    {
+        $this->assignedBugs[] = $bug;
+    }
+}
+```
+
+I chose to name the inverse methods in past-tense, which should indicate that the actual assigning has already taken place and the methods are only used for ensuring consistency of the references. This approach is my personal preference, you can choose whatever method to make this work.
+
+You can see from User#addReportedBug() and User#assignedToBug() that using this method in userland alone would not add the Bug to the collection of the owning side in Bug#reporter or Bug#engineer. Using these methods and calling Doctrine for persistence would not update the collections representation in the database.
+
+Only using Bug#setEngineer() or Bug#setReporter() correctly saves the relation information.
+
+將錯誤回報隔開
+
+The Bug#reporter and Bug#engineer properties are Many-To-One relations, which point to a User. In a normalized relational model the foreign key is saved on the Bug’s table, hence in our object-relation model the Bug is at the owning side of the relation. You should always make sure that the use-cases of your domain model should drive which side is an inverse or owning one in your Doctrine mapping. In our example, whenever a new bug is saved or an engineer is assigned to the bug, we don’t want to update the User to persist the reference, but the Bug. This is the case with the Bug being at the owning side of the relation.
+
+Bugs reference Products by an uni-directional ManyToMany relation in the database that points from Bugs to Products.
+
+```
+<?php
+// src/Bug.php
+class Bug
+{
+    // ... (previous code)
+
+    protected $products = null;
+
+    public function assignToProduct($product)
+    {
+        $this->products[] = $product;
+    }
+
+    public function getProducts()
+    {
+        return $this->products;
+    }
+}
+```
+
+---
+
+# Lets add metadata mappings for the User and Bug
+
+We are now finished with the domain model given the requirements. Lets add metadata mappings for the User and Bug as we did for the Product before:
+
+```
+<?php
+// src/Bug.php
+/**
+ * @Entity @Table(name="bugs")
+ **/
+class Bug
+{
+    /**
+     * @Id @Column(type="integer") @GeneratedValue
+     **/
+    protected $id;
+    /**
+     * @Column(type="string")
+     **/
+    protected $description;
+    /**
+     * @Column(type="datetime")
+     **/
+    protected $created;
+    /**
+     * @Column(type="string")
+     **/
+    protected $status;
+
+    /**
+     * @ManyToOne(targetEntity="User", inversedBy="assignedBugs")
+     **/
+    protected $engineer;
+
+    /**
+     * @ManyToOne(targetEntity="User", inversedBy="reportedBugs")
+     **/
+    protected $reporter;
+
+    /**
+     * @ManyToMany(targetEntity="Product")
+     **/
+    protected $products;
+
+    // ... (other code)
+}
+```
+
+```
+<?php
+// src/User.php
+/**
+ * @Entity @Table(name="users")
+ **/
+class User
+{
+    /**
+     * @Id @GeneratedValue @Column(type="integer")
+     * @var int
+     **/
+    protected $id;
+
+    /**
+     * @Column(type="string")
+     * @var string
+     **/
+    protected $name;
+
+    /**
+     * @OneToMany(targetEntity="Bug", mappedBy="reporter")
+     * @var Bug[]
+     **/
+    protected $reportedBugs = null;
+
+    /**
+     * @OneToMany(targetEntity="Bug", mappedBy="engineer")
+     * @var Bug[]
+     **/
+    protected $assignedBugs = null;
+
+    // .. (other code)
+}
+```
+
+
+
+```
+[eric_tu@localhost LearnDoctrine]$ vendor/bin/doctrine orm:schema-tool:update --force
+PHP Fatal error:  Cannot redeclare Bug::$products in /usr/share/nginx/html/LearnDoctrine/src/Bug.php on line 96
+```
+
+```
+[eric_tu@localhost LearnDoctrine]$ vendor/bin/doctrine orm:schema-tool:update --force
+PHP Fatal error:  Cannot redeclare User::$reportedBugs in /usr/share/nginx/html/LearnDoctrine/src/User.php on line 56
+```
+
+```
+[eric_tu@localhost LearnDoctrine]$ vendor/bin/doctrine orm:schema-tool:update --force
+PHP Fatal error:  Cannot redeclare Bug::$engineer in /usr/share/nginx/html/LearnDoctrine/src/Bug.php on line 106
+```
+
+```
+[eric_tu@localhost LearnDoctrine]$ vendor/bin/doctrine orm:schema-tool:update --force
+PHP Fatal error:  Cannot redeclare User::$assignedBugs in /usr/share/nginx/html/LearnDoctrine/src/User.php on line 58
+
+```
+
+```
+[eric_tu@localhost LearnDoctrine]$ vendor/bin/doctrine orm:schema-tool:update --force
+PHP Fatal error:  Cannot redeclare Bug::$reporter in /usr/share/nginx/html/LearnDoctrine/src/Bug.php on line 109
+
+```
+
+```
+[eric_tu@localhost LearnDoctrine]$ vendor/bin/doctrine orm:schema-tool:update --force
+PHP Fatal error:  Cannot redeclare User::$reportedBugs in /usr/share/nginx/html/LearnDoctrine/src/User.php on line 68
+
+```
+
+```
+[eric_tu@localhost LearnDoctrine]$ vendor/bin/doctrine orm:schema-tool:update --force
+PHP Fatal error:  Cannot redeclare Bug::$products in /usr/share/nginx/html/LearnDoctrine/src/Bug.php on line 135
+```
+
+```
+[eric_tu@localhost LearnDoctrine]$ vendor/bin/doctrine orm:schema-tool:update --force
+PHP Fatal error:  Cannot redeclare User::$assignedBugs in /usr/share/nginx/html/LearnDoctrine/src/User.php on line 70
+
+```
+---
+
+```
+[eric_tu@localhost LearnDoctrine]$ vendor/bin/doctrine orm:schema-tool:update --force
+PHP Parse error:  syntax error, unexpected '@', expecting variable (T_VARIABLE) in /usr/share/nginx/html/LearnDoctrine/src/Bug.php on line 138
+```
+
+
+
+### Database schema updated successfully!
+
+```
+[eric_tu@localhost LearnDoctrine]$ vendor/bin/doctrine orm:schema-tool:update --force
+Updating database schema...
+Database schema updated successfully! "10" queries were executed
+```
+---
+
+# Implementing more Requirements
+
+### create user entities
+
+```
+<?php
+// create_user.php
+require_once "bootstrap.php";
+
+$newUsername = $argv[1];
+
+$user = new User();
+$user->setName($newUsername);
+
+$entityManager->persist($user);
+$entityManager->flush();
+
+echo "Created User with ID " . $user->getId() . "\n";
+
+```
+
+```
+[eric_tu@localhost LearnDoctrine]$ php creat_user.php  beberlei
+Created User with ID 1
+```
+
+# We now have the data to create a bug and the code for this scenario may look like this:
+```
+<?php
+// create_bug.php
+require_once "bootstrap.php";
+
+$theReporterId = $argv[1];
+$theDefaultEngineerId = $argv[2];
+$productIds = explode(",", $argv[3]);
+
+$reporter = $entityManager->find("User", $theReporterId);
+$engineer = $entityManager->find("User", $theDefaultEngineerId);
+if (!$reporter || !$engineer) {
+    echo "No reporter and/or engineer found for the input.\n";
+    exit(1);
+}
+
+$bug = new Bug();
+$bug->setDescription("Something does not work!");
+$bug->setCreated(new DateTime("now"));
+$bug->setStatus("OPEN");
+
+foreach ($productIds as $productId) {
+    $product = $entityManager->find("Product", $productId);
+    $bug->assignToProduct($product);
+}
+
+$bug->setReporter($reporter);
+$bug->setEngineer($engineer);
+
+$entityManager->persist($bug);
+$entityManager->flush();
+
+echo "Your new Bug Id: ".$bug->getId()."\n";
+```
+
+```
+[eric_tu@localhost LearnDoctrine]$ vendor/bin/doctrine orm:schema-tool:update --force
+Updating database schema...
+Database schema updated successfully! "18" queries were executed
+
+[eric_tu@localhost LearnDoctrine]$ php create_bug.php 1 1 1
+
+PHP Notice:  Undefined variable: theReporterId in /usr/share/nginx/html/LearnDoctrine/create_bug.php on line 10
+
+PHP Fatal error:  Uncaught exception 'Doctrine\ORM\ORMException' with message 'The identifier id is missing for a query of User' in /usr/share/nginx/html/LearnDoctrine/vendor/doctrine/orm/lib/Doctrine/ORM/ORMException.php:259
+
+Stack trace:
+#0 /usr/share/nginx/html/LearnDoctrine/vendor/doctrine/orm/lib/Doctrine/ORM/EntityManager.php(378): Doctrine\ORM\ORMException::missingIdentifierField('User', 'id')
+
+#1 /usr/share/nginx/html/LearnDoctrine/create_bug.php(10): Doctrine\ORM\EntityManager->find('User', NULL)
+
+#2 {main}
+  thrown in /usr/share/nginx/html/LearnDoctrine/vendor/doctrine/orm/lib/Doctrine/ORM/ORMException.php on line 259
+  ```
+
+  ```
+  [eric_tu@localhost LearnDoctrine]$ php create_bug.php 1 1 1
+PHP Fatal error:  Call to undefined method Doctrine\ORM\EntityManager::ifnd() in /usr/share/nginx/html/LearnDoctrine/create_bug.php on line 24
+[eric_tu@localhost LearnDoc
+```
+
+```
+[eric_tu@localhost LearnDoctrine]$ php create_bug.php 1 1 1
+PHP Fatal error:  Call to undefined method User::addReporter() in /usr/share/nginx/html/LearnDoctrine/src/Bug.php on line 119
+```
+
+119 $reporter->addReportedBug($this);
+
+
+### success
+
+
+```
+[eric_tu@localhost LearnDoctrine]$ php create_bug.php 1 1 1
+Your new Bug Id: 1
+```
+
+
+
+This is the first contact with the read API of the EntityManager, showing that a call to EntityManager#find($name, $id) returns a single instance of an entity queried by primary key. Besides this we see the persist + flush pattern again to save the Bug into the database.
+
+See how simple relating Bug, Reporter, Engineer and Products is done by using the discussed methods in the “A first prototype” section. The UnitOfWork will detect this relationship when flush is called and relate them in the database appropriately.
+
+# Queries for Application Use-Cases
+
+# List of Bugs
+
+Using the previous examples we can fill up the database quite a bit, however we now need to discuss how to query the underlying mapper for the required view representations. When opening the application, bugs can be paginated through a list-view, which is the first read-only use-case:
