@@ -1,0 +1,59 @@
+整個 $renderArray
+
+```
+2 64         $renderArray = [~
+- 65             'messages' => $messages,~
+3 66             'maxPages' => $maxPages,~
+3 67             'thisPage' => $thisPage~
+- 68                 ];~
+```
+
+{
+"messages":[
+    {"updatedAt":"2017-06-01 16:53:10","publishedAt":"2017-06-01 16:53:10","id":74,"userName":"hiadsa","msg":"dadsadas"},
+    {"updatedAt":"2017-06-01 16:23:48","publishedAt":"2017-06-01 16:23:48","id":73,"userName":"ttt","msg":"yyy"},
+    {"updatedAt":"2017-06-01 15:24:16","publishedAt":"2017-06-01 15:24:16","id":72,"userName":"3345678","msg":"3345678"},
+    {"updatedAt":"2017-05-31 08:14:03","publishedAt":"2017-05-24 09:46:44","id":37,"userName":"test","msg":"sadsadd"},
+    {"updatedAt":"2017-05-31 08:13:18","publishedAt":"2017-05-25 17:01:14","id":52,"userName":"new_asdad","msg":"new_adsada"}
+    ],
+"maxPages":4,
+"thisPage":1
+}
+
+
+---
+
+
+$renderArray0 = $renderArray["messages"];~
+$json2 = $serializer->serialize($renderArray0,'json');
+
+
+[
+{"updatedAt":"2017-06-01 16:53:10","publishedAt":"2017-06-01 16:53:10","id":74,"userName":"hiadsa","msg":"dadsadas"},
+{"updatedAt":"2017-06-01 16:23:48","publishedAt":"2017-06-01 16:23:48","id":73,"userName":"ttt","msg":"yyy"},
+{"updatedAt":"2017-06-01 15:24:16","publishedAt":"2017-06-01 15:24:16","id":72,"userName":"3345678","msg":"3345678"},
+{"updatedAt":"2017-05-31 08:14:03","publishedAt":"2017-05-24 09:46:44","id":37,"userName":"test","msg":"sadsadd"},
+{"updatedAt":"2017-05-31 08:13:18","publishedAt":"2017-05-25 17:01:14","id":52,"userName":"new_asdad","msg":"new_adsada"}
+]
+
+---
+
+$renderArray0 = $renderArray["messages"][0];~
+$json2 = $serializer->serialize($renderArray0,'json');
+
+
+{"updatedAt":"2017-06-01 16:53:10","publishedAt":"2017-06-01 16:53:10","id":74,"userName":"hiadsa","msg":"dadsadas"}
+
+
+$renderArray0 = $renderArray["messages"][0]["id"];
+[error] : Cannot use object fo type AppBundle\Entity\Message as array
+
+改成
+$renderArray0 = $renderArray["messages"][0]->getId();
+
+這時候 $renderArray0 會得到 74 也就是 $renderArray 中的 messages 裡的第一筆 message 的 ID
+
+
+
+
+

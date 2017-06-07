@@ -1,0 +1,147 @@
+<DOCTYPE>
+    <html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>TEST CATCH API</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+        
+             $(document).ready(function() {
+
+
+                 var url = $("#url").val();
+                 if (url){
+                     url = url;
+                 }else{
+                     url = 1;
+                 }
+                  var urlp = 'http://test123/api/list/' + url;
+
+                $.ajax({
+
+            
+                   // url: 'http://test123/api/list/2',
+                    url : urlp,
+                    // data: $('#sentToBack').serialize(),
+                    type: "GET",
+                    dataType: 'text',
+
+                    success: function(msg) {
+                        // alert(msg);
+                        $num = JSON.parse(msg)["messages"].length;
+                        $maxPage = JSON.parse(msg)["maxPages"];
+                        $thisPage = JSON.parse(msg)["thisPage"];
+                        $("div").text("maxPage:" + $maxPage);
+                       // document.write(JSON.parse(msg)["messages"][0]["id"]);
+                        
+                        for(let i=0; i<$num ;i++){
+                            $id = JSON.parse(msg)["messages"][i]["id"];
+                            $msg = JSON.parse(msg)["messages"][i]["msg"];
+                            $publishedAt = JSON.parse(msg)["messages"][i]["publishedAt"];
+                            $updatedAt = JSON.parse(msg)["messages"][i]["updatedAt"];
+                            $userName = JSON.parse(msg)["messages"][i]["userName"]
+                           // document.write("id: " + $id + " message: "+ $msg + " publishedAt: " + $publishedAt + "</br>" );
+                            $("p" +(i+1)).text("id: " + $id + " message: "+ $msg + " publishedAt: " + $publishedAt );
+                        }
+                       // $("td").text("<a href="http://www.wibibi.com" target="_blank" style="text-decoration:none;color:red;">Wibibi 網頁設計教學百科</a>")
+
+                        console.log(msg)
+
+                    },
+
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status);
+                        alert(thrownError);
+                    }
+
+                    
+
+                });
+
+            });
+
+
+
+             var Submit = function() {
+
+                 var url = $("#url").val();
+                 var urlu = $("#url").val();
+                 var urld = $("#url").val();
+
+                 if (url){
+                     url = url;
+                 }else{
+                     url = 1;
+                 }
+                  var urlp = 'http://test123/api/list/' + url;
+
+                
+
+                $.ajax({
+
+            
+                   // url: 'http://test123/api/list/2',
+                    url : urlp,
+                    // data: $('#sentToBack').serialize(),
+                    type: "GET",
+                    dataType: 'text',
+
+                    success: function(msg) {
+                        // alert(msg);
+                        $num = JSON.parse(msg)["messages"].length;
+                        $maxPage = JSON.parse(msg)["maxPages"];
+                        $thisPage = JSON.parse(msg)["thisPage"];
+
+                       // document.write(JSON.parse(msg)["messages"][0]["id"]);
+                        
+                        for(let i=0; i<$num ;i++){
+                            $id = JSON.parse(msg)["messages"][i]["id"];
+                            $msg = JSON.parse(msg)["messages"][i]["msg"];
+                            $publishedAt = JSON.parse(msg)["messages"][i]["publishedAt"];
+                            $updatedAt = JSON.parse(msg)["messages"][i]["updatedAt"];
+                            $userName = JSON.parse(msg)["messages"][i]["userName"]
+                           // document.write("id: " + $id + " message: "+ $msg + " publishedAt: " + $publishedAt + "</br>" );
+                            $("p" +(i+1)).text("id: " + $id + " message: "+ $msg + " publishedAt: " + $publishedAt );
+                        
+                        }
+
+
+                        
+                        console.log(msg)
+                    },
+
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status);
+                        alert(thrownError);
+                    }
+                });
+
+            }
+            
+        </script>
+    </head>
+
+    <body>
+        <div>     </div>
+        <form id="sentToBack">
+            <label >go to page</label>
+            <input type="text" id="url" name="url"  />
+            <input type="button" value="送出" onClick="Submit()" />
+<!--
+            <input type="text" id="urlu" name="u" style="display: none;"  />
+            <input type="button" value="上一頁" onClick="SubmitU" />
+
+            <input type="text" id="urld" name="d"  style="display: none;"  />
+            <input type="button" value="下一頁" onClick="Submit" />
+            -->        
+        </form>
+        <p1> </p1></br>
+        <p2> </p2></br>
+        <p3> </p3></br>
+        <p4> </p4></br>
+        <p5> </p5></br>
+        <td></td>
+    </body>
+
+    </html>

@@ -140,3 +140,31 @@ Generating entity "AppBundle\Entity\Message"
   > generating AppBundle\Entity\Message
 
 ```
+
+
+
+  private$updatedAt;~
+| 52 ~
+| 53 ~
+| 54 ~
+| 55     public function __construct()~
+| 56     {~
+- 57         $this->publishedAt = new \DateTime('now', new \DateTimeZone('Asia/Taipei'));~
+| 58      // $this->publishedAt = new \DateTime();~
+| 59     }~
+| 60 ~
+| 61     /**~
+| 62      * Get Update Time~
+| 63      */~
+| 64     public function getupdatedAt()~
+| 65     {~
+- 66         return $this->updatedAt->format('Y-m-d H:i:s');~
+| 67     }~
+| 68 ~
+| 69     /**~
+| 70      * Set Update Time~
+| 71      */~
+| 72     public function setupdatedAt(\DateTime $publishedAt)~
+| 73     {~
+- 74         $this->updatedAt = $publishedAt;~                                                                                                                               
+| 75     }~  

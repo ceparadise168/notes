@@ -1,0 +1,25 @@
+   1 {# /Resources/views/show.html.twig #}~
+   2 ~
+   3 <head>~
+   4 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />~
+   5 <title>Message Board</title>~
+   6 <head>~
+   7 {% for message in messages %}~
+   8 <h1>Name :  {{ message.userName }}</h1>~
+   9 <h1>Message :  {{ message.msg }}</h1>~
+  10 <h1>PublishedAt :  {{ message.publishedAt }}</h1>~
+  11 {% endfor%}~                                                                                                                   
+ ~                                                                                                                                  
+ ~                       
+
+ |122     public function showAllAction()~
+|123     {~
+-124         // 使用 Doctrine 提供的 getRepository() 操作 Entity~
+2125         $repository = $this->getDoctrine()->getRepository('AppBundle:Message');~
+2126         // 透過findAll()做查詢~
+2127         $Msgs = $repository->findAll();~
+2128         $returnArray = ['messages' => $Msgs, ];~
+2129 ~
+2130         // 回傳結果~
+2131         return $this->render('/showall.html.twig',$returnArray);~
+|132     }~

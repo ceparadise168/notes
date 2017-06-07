@@ -1,0 +1,55 @@
+<DOCTYPE>
+    <html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>TEST CATCH API</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+            var Submit = function() {
+
+                var json = {
+                    "userName": "test",
+                    "msg": "test"
+                }
+                $.ajax({
+                    url: 'http://test123/api/edit/111',
+
+                    data: JSON.stringify(json),
+                    type: "GET",
+                    dataType: 'text',
+
+                    success: function(msg) {
+                        // alert(msg);
+                        console.log(msg)
+                    },
+
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status);
+                        alert(thrownError);
+                    }
+                });
+
+            }
+        </script>
+    </head>
+
+    <body>
+        <form id="sentToBack">
+            <input type="text" name="Text" />
+            <input type="button" value="送出" onClick="Submit()" />
+            <!--
+            <div id="appBundle_Message"><div><label for="appBundle_Message_UserName" class="required">User name</label>
+            <input type="text" id="appBundle_Message_UserName" name="appBundle_Message[UserName]" required="required" value="test" />
+            </div><div><label for="appBundle_Message_Msg" class="required">Msg</label>
+            <input type="text" id="appBundle_Message_Msg" name="appBundle_Message[Msg]" required="required" value="test" />
+            </div><input type="hidden" id="appBundle_Message__token" name="appBundle_Message[_token]" value="G_PAOb56T4OPzTIRjkh_9YPJfv2zyihar103ti_xkhM" /></div>
+            <input type="submit" value="Edit">
+            -->
+        </form>
+        
+    </body>
+
+    </html>
+
+    

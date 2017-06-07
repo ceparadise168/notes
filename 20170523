@@ -1,0 +1,24 @@
+Symfony: why the backslash in \DateTime(); [duplicate]
+
+https://stackoverflow.com/questions/41447845/symfony-why-the-backslash-in-datetime
+
+php 5.3 Fatal error Class DateTimeZone not found [duplicate]
+
+https://stackoverflow.com/questions/28568992/php-5-3-fatal-error-class-datetimezone-not-found
+
+
+
+datetime cannot be null 
+
+nullable=true
+
+```
+ 46 ~
+| 47     /**~
+| 48      * @var \DateTime~
+| 49      * @ORM\Column(type="datetime", nullable=true)~ 
+| 50      */~ 
+| 51     private$updatedAt;~
+
+
+```

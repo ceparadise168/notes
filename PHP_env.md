@@ -692,4 +692,42 @@ http://blog.xuite.net/tolarku/blog/195633562-CentOS+%E9%97%9C%E9%96%89+selinux
 終於成功了QQ
 
 
+解決403問題
 
+從 nginx log 發現可能是 php-fpm 的問題
+
+再看到 php-fpm log 
+[22-May-2017 08:43:38] WARNING: [pool www] child 2037 said into stderr: "ERROR: Unable to set php_value 'soap.wsdl_cache_dir'"~
+
+找到 php-fpm.d/www.conf
+
+```
+; Set session path to a directory owned by process user~
+ 224 php_value[session.save_handler] = files~
+ 225 php_value[session.save_path]    = /var/lib/php/session~
+ 226 php_value[soap.wsdl_cache_dir]  = /var/lib/php/wsdlcache~
+```
+
+yum install php56w-soap
+
+Primary script unknown because nginx doesn't have the right to access dir 
+
+http://stackoverflow.com/questions/24208139/nginx-php-fpm-file-not-found
+
+```
+
+6
+down vote
+If you checked every thing and it's correct configured, then there is last point i got:
+
+check that correct username if mentioned in file /etc/php-fpm.d/www.conf
+shareimprove this answer
+answered Feb 24 '15 at 13:11
+
+Nazir
+1,4451419
+2	 	
+Exactly this problem on OS X Yosemite with PHP 5.6 installed via Homebrew. It's quite tricky to debug because neither the Nginx error log or the php-fpm error log, even in "Debug" mode, apparently won't give you any further details than "Primary Script Unknown". The default user/group is _www:_www, which may well be not what you want (I use [myname]:staff). To restart use sudo /usr/local/opt/php56/sbin/php56-fpm restart. – William Turrell Aug 2 '15 at 15:13 
+  	 	
+This helped me after wasting an hour trying to find a solution. Thanx – Sahil May 1 '16 at 22:48
+```

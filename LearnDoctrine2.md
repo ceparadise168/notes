@@ -142,7 +142,18 @@ Or use the update functionality:
 
 ```
 $ vendor/bin/doctrine orm:schema-tool:update --force
+
 ```
+
+
+# php bin/console doctrine:schema:update --force
+
+# php bin/console doctrine:schema:update --force
+
+# php bin/console doctrine:schema:update --force
+
+# php bin/console doctrine:schema:update --force
+
 The updating of databases uses a Diff Algorithm for a given Database Schema, a cornerstone of the Doctrine\DBAL package, which can even be used without the Doctrine ORM package.
 
 # Starting with the Product

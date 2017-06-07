@@ -1,0 +1,82 @@
+list
+
+
+
+http://ourcodeworld.com/articles/read/291/how-to-solve-the-client-side-access-control-allow-origin-request-error-with-your-own-symfony-3-api
+
+
+
+2286         $response = new Response();~
+2287 ~
+2288         $response->setContent($json);~
+2289 ~
+2290         $response->headers->set('Content-Type', 'application/json');~
+2291 ~
+2292         $response->headers->set('Access-Control-Allow-Origin', '*');~
+2293 ~
+2294         if (isset($messages)) {~
+2295         //    return new Response($json);~
+2296          return $response;~                
+
+
+$message = new Message();
++        $message->setUserName('eric');
++        $message->setMsg('hello');
+ $em = $this->getDoctrine()->getManager();
+$em->persist($message);
+$em->flush();
+
+
+---
+* 2a21cb4 add CURD router
+---
+
+
+```
+307     public function createAction(Request $request)~
+|308     {~
+|309 ~
+-310         $publishAt = new \DateTime('now', new \DateTimeZone('Asia/Taipei'));~
+|311 ~
+|312 ~
+-313         $message = new Message();~
+2314         //        $form = $this->createForm('AppBundle\Form\MessageType', $message);~
+2315         //        $form->handleRequest($request);~
+2316 ~
+2317         $message->setUserName();~
+2318 ~
+2319         $message->setMsg();~
+2320 ~
+2321         $message->setPublishedAt(new \DateTime('now', new \DateTimeZone('Asia/Taipei')));~                                                                                                                                                                               
+2322 ~       
+2323         $response = new Response();~
+2324 ~       
+2325         $response->setContent($json);~
+2326 ~       
+2327         $response->headers->set('Content-Type', 'application/json');~
+2328 ~       
+2329         $response->headers->set('Access-Control-Allow-Origin', '*');~
+2330 ~       
+2331         $em = $this->getDoctrine()->getManager();~
+2332 ~       
+2333         $em->persist($message);~
+2334 ~       
+2335         $em->flush();~
+```
+
+
+updateActonAPI
+```
+public function updateAction($Id){
+$message = $em->getRepository('AppBundle:Message')->find($messageId);
+if (!$message) {
++            throw $this->createNotFoundException(
++                    'No product found ofr id ' . $messageId
++                    );
+ $message->setUserName('New User name!');
+ 
++            $en->flush();
+return $this->redirectToRouter('homepage');
+
+}
+```

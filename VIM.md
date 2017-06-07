@@ -233,3 +233,16 @@ ctrl + W (放開之後) + 上下左右 或 j k 來移動視窗
 http://vimcolors.com/
 
 http://vimawesome.com/?q=tag:php
+
+
+
+http://softsmith.blogspot.tw/2013/03/vim-tab.html
+# 讓 vim 顯示 tab 和行末的空白字元
+以下是讓 vim 顯示 tab 和行末空白字元的指令：
+set listchars=eol:$,tab:>.,trail:~,extends:>,precedes:<
+set list
+
+
+空白提示 加上變更上色 例如 color.diff and color.grep
+git config --global color.ui auto
+
