@@ -17,11 +17,16 @@
                     msg : "testEdit"
                 }
                 $.ajax({
-                    url: 'http://test123/api/edit/111',
-                    data: json,
+                    url: 'http://test123/api/edit/167',
+                    type: "PUT",
+                    data: data,
+                    //data: "_METHOD=PUT&userName=test&msg=test",
                     //data: JSON.stringify(json),
-                    type: "POST",
-                    dataType: 'text',
+                   //dataType: 'text',
+                    //cache: false,
+                    //processData: false,
+                    //contentType: false,
+
 
                     success: function(msg) {
                         // alert(msg);
