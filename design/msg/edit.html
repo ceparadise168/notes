@@ -1,0 +1,73 @@
+<DOCTYPE>
+    <html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>TEST CATCH API</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                var text =document.URL;
+                 console.log(text);
+                 var num = text.match(/\d+/);
+                 console.log( num[0]);
+            });
+            var Submit = function() {
+               
+                var u = $("#userName").val();
+                var m = $("#msg").val();
+                var json = {
+                    "userName": "test",
+                    "msg": "test"
+                }
+                /*
+                var data = {
+                    userName :"testEdit",
+                    msg : "testEdit"
+                }
+                */
+                var text =document.URL;
+                 console.log(text);
+                 var num = text.match(/\d+/);
+                 
+                var data = {
+                    userName :u,
+                    msg : m
+                }                    
+                console.log(u,m);
+                $.ajax({
+                    url: 'http://test123/api/edit/' +num[0],
+                    data: data,
+                    //data: JSON.stringify(json),
+                    type: "PUT",
+                    //dataType:'application/x-www-form-urlencoded',
+                    //dataType:'test',
+                    dataType: 'application/json',
+                    success: function(msg) {
+                        // alert(msg);
+                        console.log(msg)
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status);
+                        alert(thrownError);
+                    }
+                });
+            }
+        </script>
+    </head>
+
+    <body>
+        <form id="sentToBack">
+            <div>
+                <label>userName</label>
+             <input type="text" name="userName" id = "userName" />
+            </div>
+            <div>
+                <label>msg</label>
+            <input type="text" name="msg" id = "msg"/>
+            </div>
+            <input type="button" value="送出" onClick="Submit()" />
+        </form>
+    </body>
+
+    </html>

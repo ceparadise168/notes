@@ -1,0 +1,58 @@
+<DOCTYPE>
+    <html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>TEST CATCH API</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+      //      $(document).ready(function() {
+// target="_blank"
+/*
+                var json = {
+                    "userName": "test",
+                    "msg": "test"
+                }
+                $.ajax({
+                    url: 'http://test123/bank/log/deposit',
+
+                    data: JSON.stringify(json),
+                    type: "GET",
+                    contentType:"application/x-www-form-urlencoded",
+                    dataType: 'text',
+
+                    success: function(msg) {
+                        // alert(msg);
+                        console.log(msg)
+                    },
+
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status);
+                        alert(thrownError);
+                    }
+                });
+
+            });
+            */
+        </script>
+    </head>
+
+    <body>
+        
+        <a href="http://test123/bank/log/deposit"  style="text-decoration:none;color:red;">DLOG</a><br>
+        <a href="http://test123/bank/log/withdrawals"  style="text-decoration:none;color:blue;">WLOG</a><br>
+        <a href="http://test123/bank/log/transfer"  style="text-decoration:none;color:green;">TLOG</a><br>
+                <a href="http://test123/bank/log/receive"  style="text-decoration:none;color:gray;">RLOG</a>
+        <form id="sentToBack">
+            <input type="text" name="Text" />
+            <input type="button" value="送出" onClick="Submit()" />
+        </form>
+    </body>
+
+    </html>
+
+    
+
+
+
+

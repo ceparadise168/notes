@@ -1,0 +1,113 @@
+<DOCTYPE>
+    <html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>TEST CATCH API</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                //console.log(document.URL + "hiiiiiiiii");
+                var maxPageA = 1;
+                var url = 1;
+                var urlp = 'http://test123/api/list/' + url;
+                var goPage = function (page) {
+                    console.log(url);
+                    console.log("page:" + page);
+                    urlp = 'http://test123/api/list/' + page;
+                    goog();
+                }
+                var pagePlus = function () {
+                    console.log(url);
+                    url += 1;
+                    urlp = 'http://test123/api/list/' + url;
+                    goog();
+                }
+                var pageReduce = function () {
+                    console.log(url);
+                    url -= 1;
+                    urlp = 'http://test123/api/list/' + url;
+                    goog();
+                }
+                $('#go').click(function () {
+                    pagePlus()
+                });
+                $('#back').click(function () {
+                    pageReduce()
+                });
+                var maxPageB = 0
+                console.log(urlp)
+                var goog = function () {
+                    $.ajax({
+                        // url: 'http://test123/api/list/2',
+                        url: urlp,
+                        // data: $('#sentToBack').serialize(),
+                        type: "GET",
+                        dataType: 'text',
+                        success: function (msg) {
+                            // alert(msg);
+                            $num = JSON.parse(msg)["messages"].length;
+                            $maxPage = JSON.parse(msg)["maxPages"];
+                            $thisPage = JSON.parse(msg)["thisPage"];
+                            $("#mp").text("maxPage:" + $maxPage);
+                            var maxPageB = $maxPage;
+                            console.log(maxPageA + "11111")
+                            // document.write(JSON.parse(msg)["messages"][0]["id"]);
+                            for (let i = 0; i < $num; i++) {
+                                $id = JSON.parse(msg)["messages"][i]["id"];
+                                $msg = JSON.parse(msg)["messages"][i]["msg"];
+                                $publishedAt = JSON.parse(msg)["messages"][i]["publishedAt"];
+                                $updatedAt = JSON.parse(msg)["messages"][i]["updatedAt"];
+                                $userName = JSON.parse(msg)["messages"][i]["userName"]
+                                // document.write("id: " + $id + " message: "+ $msg + " publishedAt: " + $publishedAt + "</br>" );
+                                $("p" + (i + 1)).html(
+                                    "id: " + $id + " message: " + $msg + " publishedAt: " + $publishedAt + " | " +
+                                    "<a href =\"./edit.html?" + $id + "\"" + ">" + "EDIT</a>" +
+                                    " | " + "<a href =\"http://test123/api/delete/" + $id + "\"" + ">" + "DELETE</a>");
+                            }
+                            console.log(msg)
+                            //console.log(pageController + "pc");
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert(xhr.status);
+                            alert(thrownError);
+                        }
+                    });
+                }
+                goog();
+                console.log('test:')
+                console.log(maxPageB)
+            });
+        </script>
+    </head>
+
+    <body>
+        <div id="mp"> </div>
+        <form id="sentToBack">
+            <label>go to page</label>
+            <input type="text" id="url" name="url" />
+            <input type="button" value="送出" onClick="Submit()" />
+            <!--
+            <input type="text" id="urlu" name="u" style="display: none;"  />
+            <input type="button" value="上一頁" onClick="SubmitU" />
+            <input type="text" id="urld" name="d"  style="display: none;"  />
+            <input type="button" value="下一頁" onClick="Submit" />
+            -->
+        </form>
+        <p1> </p1>
+        </br>
+        <p2> </p2>
+        </br>
+        <p3> </p3>
+        </br>
+        <p4> </p4>
+        </br>
+        <p5> </p5>
+        </br>
+        <td></td>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="go">get next </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="back">get previous </button>
+        <p id="link"></p>
+    </body>
+
+    </html>
