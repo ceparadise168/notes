@@ -7,44 +7,55 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script>
             var Submit = function() {
-
+                var username = $('#username').val();
+                var password = $('#password').val();
+                
+                
+                console.log(username,password);
+            
                 var json = {
-                    "username": "test",
-                    "password": "test"
+                    "username": username,
+                    "password": password
                 }
+                if(username.length>0 && password.length>0){
                 $.ajax({
                     url: 'http://test123/bank/register',
-/*
-                    data: {
-                        "name":"123",
-                        "age":"50"
-                    },
-*/
 
-                    //data: JSON.stringify(json),
-                    type: "GET",
+                    data: JSON.stringify(json),
+                    type: "POST",
                     dataType: 'text',
 
                     success: function(msg) {
-                        // alert(msg);
-                        console.log(msg)
-                    },
+                            $id = JSON.parse(msg)["id"];
+                            $username = JSON.parse(msg)["username"];
+                            $passowrd = JSON.parse(msg)["password"];
+                            $("p").html("Your Bank ID Is: " + $id)
 
+                        console.log(msg)
+                    $("a").html("<a href=" +"./op.html" +">記住ID並前往操作畫面</a><br>")
+                    },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert(xhr.status);
                         alert(thrownError);
                     }
                 });
+                }else{alert("帳號密碼必填"); }
 
             }
         </script>
     </head>
 
     <body>
+        <h4>註冊新帳號</h4>
         <form id="sentToBack">
-            <input type="text" name="Text" />
-            <input type="button" value="送出" onClick="Submit()" />
+            <label>姓名</label>
+            <input type="text" id="username" name="username" required pattern="[A-Za-z0-9]{1,20}" />
+            <label>密碼</label>
+            <input type="text" id="password" name="password" required pattern="[A-Za-z0-9]{1,20}" />
+            <input type="button" value="註冊" onClick="Submit()" />
         </form>
+        <a href="./op.html"  style="text-decoration:none;color:green;">我已經有帳號</a><br>
+        <p></p>
     </body>
 
     </html>
