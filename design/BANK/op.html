@@ -87,7 +87,9 @@
                         type: "POST",
                         dataType: 'text',
                         success: function (msg) {
+
                             if(JSON.parse(msg)["ERROR"] != "NOT ALLOWED"){
+
                             $num = JSON.parse(msg).length;
                             $id = JSON.parse(msg)["bankID"];
                             $amount = JSON.parse(msg)["amount"];
@@ -135,7 +137,9 @@
                         type: "POST",
                         dataType: 'text',
                         success: function (msg) {
+
                             if(JSON.parse(msg)["ERROR"] != "NOT ALLOWED"){
+
                             $num = JSON.parse(msg).length;
                             $id = JSON.parse(msg)["bankID"];
                             $amount = JSON.parse(msg)["amount"];
