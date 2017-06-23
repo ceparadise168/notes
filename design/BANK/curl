@@ -1,0 +1,16 @@
+
+for register
+curl -H "Content-Type: application/json" -X POST -d '{"username":"xyz","password":"xyz"}' http://test123/bank/register
+curl -H "Content-Type: application/json" -X POST -d '{"username":"xyz","password":"xyz"}' http://127.0.0.1:8000/bank/register
+
+
+SERACH
+curl -H "Content-Type: application/json" -X POST -d '{"id":"1","behavior":"deposit","from":"0","to":"100"}' http://127.0.0.1:8000/bank/serach
+
+deposit
+
+curl -H "Content-Type: application/json" -X POST -d '{"id":"1","amount":"100"}' http://127.0.0.1:8000/bank/deposit
+
+withdrawals
+
+curl -H "Content-Type: application/json" -X POST -d '{"id":"1","amount":"100"}' http://127.0.0.1:8000/bank/withdrawals

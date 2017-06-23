@@ -1,0 +1,213 @@
+<DOCTYPE>
+    <html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>TEST CATCH API</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+            var Deposit = function () {
+                $("p1").html("</br>");
+                $("p2").html("</br>");
+                var id = $('#id').val();
+                var amount = $('#amount').val();
+                console.log(id, amount);
+                var json = {
+                    "id": id,
+                    "amount": amount
+                }
+                if (id.length > 0 && amount.length > 0) {
+                    $.ajax({
+                        url: 'http://test123/bank/deposit',
+                        data: JSON.stringify(json),
+                        type: "POST",
+                        dataType: 'text',
+                        success: function (msg) {
+                            $id = JSON.parse(msg)["bankID"];
+                            $amount = JSON.parse(msg)["amount"];
+                            $error = JSON.parse(msg)["ERROR"];
+                            if ($error) { $amount = "操作失敗，非法帳戶或金額" }
+                            $("p3").html("存入現金: " + $amount)
+
+                            console.log(msg)
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert(xhr.status);
+                            alert(thrownError);
+                        }
+                    });
+                } else { alert("欄位必填"); }
+            }
+
+            var Withdrawals = function () {
+                $("p1").html("</br>");
+                $("p2").html("</br>");
+                var id = $('#id').val();
+                var amount = $('#amount').val();
+
+                console.log(id, amount);
+                var json = {
+                    "id": id,
+                    "amount": amount
+                }
+                if (id.length > 0 && amount.length > 0) {
+                    $.ajax({
+                        url: 'http://test123/bank/withdrawals',
+                        data: JSON.stringify(json),
+                        type: "POST",
+                        dataType: 'text',
+                        success: function (msg) {
+                            $id = JSON.parse(msg)["bankID"];
+                            $amount = JSON.parse(msg)["amount"];
+                            $error = JSON.parse(msg)["ERROR"];
+                            if ($error) { $amount = "提領失敗，現金不足或帳戶不存在" }
+                            $("p3").html("提領現金: " + $amount)
+
+                            console.log(msg)
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert(xhr.status);
+                            alert(thrownError);
+                        }
+                    });
+                } else { alert("欄位必填"); }
+            }
+
+            var DLOG = function () {
+                $("p3").html("</br>");
+                var id = $('#id').val();
+                var from = $('#from').val();
+                var to = $('#to').val();
+                console.log(id, amount);
+                var json = {
+                    "id": id,
+                    "behavior": "deposit",
+                    "from": from,
+                    "to": to
+                }
+                if (id.length > 0) {
+                    $.ajax({
+                        url: 'http://test123/bank/search',
+                        data: JSON.stringify(json),
+                        type: "POST",
+                        dataType: 'text',
+                        success: function (msg) {
+
+                            if (typeof (JSON.parse(msg)["ERROR"]) == "undefined") {
+
+                                $num = JSON.parse(msg).length;
+                                $id = JSON.parse(msg)["bankID"];
+                                $amount = JSON.parse(msg)["amount"];
+
+
+                                $balance = JSON.parse(msg)[0]["bank"]["balance"];
+                                $username = JSON.parse(msg)[0]["bank"]["username"];
+                                //$("p").html("查詢存款紀錄: ")
+                                $("p1").html("用戶_" + $username + "_您好，" + "目前餘額共: " + $balance + "元" + "</br>" + "查詢存款紀錄共" + $num + "筆")
+                                $("p2").html("</br>");
+                                for (let i = 0; i < $num; i++) {
+                                    $tradeID = JSON.parse(msg)[i]["id"];
+                                    $amount = JSON.parse(msg)[i]["amount"]
+                                    $time = JSON.parse(msg)[i]["tradingDate"]
+                                    $("p2").append("<p>" + "交易代號:" + $tradeID + "~~~" + "存款金額:" + $amount + "~~~" + "時間:" + $time + "</p>" + "</br>");
+                                }
+                                $("p2").append("<p>-------------------------------</p>");
+                                console.log(msg)
+                            } else {
+                                alert("非法帳戶或查詢參數");
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert(xhr.status);
+                            alert(thrownError);
+                        }
+                    });
+                } else { alert("欄位必填"); }
+            }
+
+
+            var WLOG = function () {
+                $("p3").html("</br>");
+                var id = $('#id').val();
+                var from = $('#from').val();
+                var to = $('#to').val();
+                console.log(id, amount);
+                var json = {
+                    "id": id,
+                    "behavior": "withdrawals",
+                    "from": from,
+                    "to": to
+                }
+                if (id.length > 0) {
+                    $.ajax({
+                        url: 'http://test123/bank/search',
+                        data: JSON.stringify(json),
+                        type: "POST",
+                        dataType: 'text',
+                        success: function (msg) {
+
+                            if (typeof (JSON.parse(msg)["ERROR"]) == "undefined") {
+
+                                $num = JSON.parse(msg).length;
+                                $error = JSON.parse(msg)["ERROR"];
+                                $balance = JSON.parse(msg)[0]["bank"]["balance"];
+                                $username = JSON.parse(msg)[0]["bank"]["username"];
+                                //console.log($num,$id,$amount,$error,$balance);
+                                $("p1").html("用戶_" + $username + "_您好，" + "目前餘額共: " + $balance + "元" + "</br>" + "查詢提款紀錄，共" + $num + "筆")
+
+                                $("p2").html("</br>");
+                                for (let i = 0; i < $num; i++) {
+                                    $tradeID = JSON.parse(msg)[i]["id"];
+                                    $amount = JSON.parse(msg)[i]["amount"]
+                                    $time = JSON.parse(msg)[i]["tradingDate"]
+                                    $("p2").append("<p>" + "交易代號:" + $tradeID + "~~~" + "提款金額:" + $amount + "~~~" + "時間:" + $time + "</p>" + "</br>");
+                                }
+
+                                console.log(msg)
+                            } else {
+                                alert("非法帳戶或查詢參數");
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert(xhr.status);
+                            alert(thrownError);
+                        }
+                    });
+                } else { alert("欄位必填"); }
+            }
+        </script>
+    </head>
+
+    <body>
+        <form id="sentToBack">
+            <label>id</label>
+            <input type="text" id="id" name="id" value="1" />
+            <label>amount</label>
+            <input type="text" id="amount" name="amount" value="100" />
+
+            <input type="button" value="存款" onClick="Deposit()" />
+            <input type="button" value="提款" onClick="Withdrawals()" />
+            <input type="button" value="查詢存款紀錄" onClick="DLOG()" />
+            <input type="button" value="查詢提款紀錄" onClick="WLOG()" />
+        </form>
+        <form id="setpage">
+            <label>指定顯示筆數</label>
+            <input type="text" id="from" name="from" value="0" />
+            <label>~</label>
+            <input type="text" id="to" name="to" value="100" />
+        </form>
+        <p3></p3>
+        <p1></p1>
+        </br>
+
+        <div id="g">
+            <p2> </p2>
+            <div id="c"></div>
+        </div>
+
+        </br>
+        <a href="./register.html" style="text-decoration:none;color:red;">我要註冊新帳號</a><br>
+
+    </body>
+
+    </html>
