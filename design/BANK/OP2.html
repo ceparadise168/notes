@@ -78,46 +78,77 @@
                 var id = $('#id').val();
                 var from = $('#from').val();
                 var to = $('#to').val();
-                console.log(id, amount);
+                var behavior = "deposit"
+                //console.log(id, amount);
                 var json = {
                     "id": id,
-                    "behavior": "deposit",
+                    "behavior": behavior,
                     "from": from,
                     "to": to
+                }
+                var data = {
+                    id: id,
+                    behavior: behavior,
+                    from: from,
+                    to: to
                 }
                 if (id.length > 0) {
                     $.ajax({
                         url: 'http://test123/bank/search',
-                        data: JSON.stringify(json),
-                        type: "POST",
-                        dataType: 'text',
+                        //data: JSON.stringify(json),
+                        data: data,
+                        type: "GET",
+                        //dataType: 'text',
+                        dataType: 'json',
                         success: function (msg) {
+                            console.log(msg[0]["amount"]);
+                            if (typeof (msg["ERROR"]) == "undefined") {
 
-                            if (typeof (JSON.parse(msg)["ERROR"]) == "undefined") {
-
-                                $num = JSON.parse(msg).length;
-                                $id = JSON.parse(msg)["bankID"];
-                                $amount = JSON.parse(msg)["amount"];
-
-
-                                $balance = JSON.parse(msg)[0]["bank"]["balance"];
-                                $username = JSON.parse(msg)[0]["bank"]["username"];
+                                $num = msg.length;
+                                
+                                $balance = msg[0]["bank"]["balance"];
+                                $username = msg[0]["bank"]["username"];
                                 //$("p").html("查詢存款紀錄: ")
                                 $("p1").html("用戶_" + $username + "_您好，" + "目前餘額共: " + $balance + "元" + "</br>" + "查詢存款紀錄共" + $num + "筆")
                                 $("p2").html("</br>");
                                 for (let i = 0; i < $num; i++) {
-                                    $tradeID = JSON.parse(msg)[i]["id"];
-                                    $amount = JSON.parse(msg)[i]["amount"]
-                                    $time = JSON.parse(msg)[i]["tradingDate"]
+                                    $tradeID = msg[i]["id"];
+                                    $amount =msg[i]["amount"]
+                                    $time = msg[i]["tradingDate"]
                                     $("p2").append("<p>" + "交易代號:" + $tradeID + "~~~" + "存款金額:" + $amount + "~~~" + "時間:" + $time + "</p>" + "</br>");
                                 }
                                 $("p2").append("<p>-------------------------------</p>");
-                                console.log(msg)
+                                //console.log(msg)
                             } else {
                                 alert("非法帳戶或查詢參數");
                             }
+                            /*     
+                                if (typeof (JSON.parse('msg')["ERROR"]) == "undefined") {
+     
+                                     $num = JSON.parse(msg).length;
+                                     $id = JSON.parse(msg)["bankID"];
+                                     $amount = JSON.parse(msg)["amount"];
+                                      console.log($num,$num,$num);
+                                     $balance = JSON.parse(msg)[0]["bank"]["balance"];
+                                     $username = JSON.parse(msg)[0]["bank"]["username"];
+                                     //$("p").html("查詢存款紀錄: ")
+                                     $("p1").html("用戶_" + $username + "_您好，" + "目前餘額共: " + $balance + "元" + "</br>" + "查詢存款紀錄共" + $num + "筆")
+                                     $("p2").html("</br>");
+                                     for (let i = 0; i < $num; i++) {
+                                         $tradeID = JSON.parse(msg)[i]["id"];
+                                         $amount = JSON.parse(msg)[i]["amount"]
+                                         $time = JSON.parse(msg)[i]["tradingDate"]
+                                         $("p2").append("<p>" + "交易代號:" + $tradeID + "~~~" + "存款金額:" + $amount + "~~~" + "時間:" + $time + "</p>" + "</br>");
+                                     }
+                                     $("p2").append("<p>-------------------------------</p>");
+                                     //console.log(msg)
+                                 } else {
+                                     alert("非法帳戶或查詢參數");
+                                 }
+                                 */
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
+
                             alert(xhr.status);
                             alert(thrownError);
                         }
@@ -142,10 +173,31 @@
                     $.ajax({
                         url: 'http://test123/bank/search',
                         data: JSON.stringify(json),
-                        type: "POST",
+                        type: "GET",
                         dataType: 'text',
                         success: function (msg) {
 
+                            if (typeof (msg["ERROR"]) == "undefined") {
+
+                                $num = msg.length;
+                                
+                                $balance = msg[0]["bank"]["balance"];
+                                $username = msg[0]["bank"]["username"];
+                                //$("p").html("查詢存款紀錄: ")
+                                $("p1").html("用戶_" + $username + "_您好，" + "目前餘額共: " + $balance + "元" + "</br>" + "查詢提款紀錄共" + $num + "筆")
+                                $("p2").html("</br>");
+                                for (let i = 0; i < $num; i++) {
+                                    $tradeID = msg[i]["id"];
+                                    $amount =msg[i]["amount"]
+                                    $time = msg[i]["tradingDate"]
+                                    $("p2").append("<p>" + "交易代號:" + $tradeID + "~~~" + "提款金額:" + $amount + "~~~" + "時間:" + $time + "</p>" + "</br>");
+                                }
+                                $("p2").append("<p>-------------------------------</p>");
+                                //console.log(msg)
+                            } else {
+                                alert("非法帳戶或查詢參數");
+                            }
+/*
                             if (typeof (JSON.parse(msg)["ERROR"]) == "undefined") {
 
                                 $num = JSON.parse(msg).length;
@@ -167,6 +219,7 @@
                             } else {
                                 alert("非法帳戶或查詢參數");
                             }
+*/
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
                             alert(xhr.status);

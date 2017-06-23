@@ -32,11 +32,12 @@
                             $("p").html("Your Bank ID Is: " + $id)
 
                         console.log(msg)
-                    $("a").html("<a href=" +"./op.html" +">記住ID並前往操作畫面</a><br>")
+                    $("a").html("<a href=" +"./OP2.html" +">記住ID並前往操作畫面</a><br>")
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert(xhr.status);
                         alert(thrownError);
+                        
                     }
                 });
                 }else{alert("帳號密碼必填"); }

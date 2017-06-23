@@ -5,7 +5,10 @@ curl -H "Content-Type: application/json" -X POST -d '{"username":"xyz","password
 
 
 SERACH
+POST
 curl -H "Content-Type: application/json" -X POST -d '{"id":"1","behavior":"deposit","from":"0","to":"100"}' http://127.0.0.1:8000/bank/serach
+GET
+curl -H "Content-Type: application/json" -X GET -d '{"id":"1","behavior":"deposit","from":"0","to":"100"}' http://127.0.0.1:8000/bank/serach
 
 deposit
 
@@ -14,3 +17,24 @@ curl -H "Content-Type: application/json" -X POST -d '{"id":"1","amount":"100"}' 
 withdrawals
 
 curl -H "Content-Type: application/json" -X POST -d '{"id":"1","amount":"100"}' http://127.0.0.1:8000/bank/withdrawals
+
+
+
+# post_loc.txt contains the json you want to post
+# -p means to POST it
+# -H adds an Auth header (could be Basic or Token)
+# -T sets the Content-Type
+# -c is concurrent clients
+# -n is the number of requests to run in the test
+
+
+ab -p  -T application/json -H 'id:1,amount:1' -c 10 -n 2000 http://127.0.0.1:8000/bank/deposit
+
+deposit
+
+ab -p ./abdpost.txt -T application/json  -c 10 -n 2000 http://127.0.0.1:8000/bank/deposit
+
+
+withdrawals
+
+ab -p ./abdpost.txt -T application/json  -c 10 -n 2000 http://127.0.0.1:8000/bank/withdrawals
